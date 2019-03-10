@@ -2,11 +2,14 @@ require("minitest/autorun")
 require('minitest/rg')
 require_relative("../guest")
 require_relative("../song")
+require_relative("../room")
+require_relative("../karaoke")
 
 class GuestTest < MiniTest::Test
 
   def setup()
-    @guest1 = Guest.new("Bill", 26, 100.0, "Mr. Trex")
+    @guest1 = Guest.new("Bill", 26, 100, "Mr. Trex")
+    @guest2 = Guest.new("Monika", 52, 500, "Hey Jude")
   end
 
   def test_can_create_guest_from_class()
@@ -25,8 +28,10 @@ class GuestTest < MiniTest::Test
     assert_equal("Mr. Trex", @guest1.favourite_song_name)
   end
 
-  def test_pay_money_to_karaoke()
-    assert_equal(80.0, @guest1.cash_in_wallet)
+  def test_pay_money_to_room()
+    @room3 = Room.new(30, [], 5, 0, 30)
+    @guest1.pay_money_to_room(@room3)
+    assert_equal(70, @guest1.cash_in_wallet)
   end
 
 end
