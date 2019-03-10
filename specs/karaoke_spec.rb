@@ -9,7 +9,6 @@ class KaraokeTest < MiniTest::Test
 
   def setup
 
-    @rooms = [@room1, @room2, @room3]
     @room1 = Room.new(20, @playlist1, 3, [], 0)
     @room2 = Room.new(30, @playlist2, 2, ["cleaner", "squatter"], 0)
     @room3 = Room.new(30, @playlist2, 5, [], 0)
@@ -32,7 +31,7 @@ class KaraokeTest < MiniTest::Test
     @song5 = Song.new("Enter Sandman", "Metallica")
     @song6 = Song.new("Hit Me Baby One More Time", "Brittney Spears")
 
-    @karaoke = Karaoke.new("Singing_in_the_Rain", 0, @rooms, @all_songs)
+    @karaoke = Karaoke.new("Singing_in_the_Rain", 0, [@room1, @room2, @room3], @all_songs)
   end
 
   def test_can_create_karaoke_from_class()
@@ -44,35 +43,58 @@ class KaraokeTest < MiniTest::Test
   def test_karaoke_has_till()
     assert_equal(0, @karaoke.till)
   end
+
   def test_karaoke_has_rooms()
-    assert_equal(3, @rooms.length)
+    assert_equal(3, @karaoke.rooms.length)
   end
   def test_karaoke_has_songs()
     assert_equal(3, @playlist1.length)
   end
 
   def test_check_guest_age___old_enough()
-    assert_equal(true, @karaoke.check_guest_age(@guest1))
+    assert_equal("Bill is old enough.", @karaoke.check_guest_age(@guest1))
   end
 
-  def test_check_guest_age___too_young()
-    assert_equal(false, @karaoke.check_guest_age(@guest3))
+  def test_karaoke_has_available_rooms__empty()
+    assert_equal([], @karaoke.available_rooms)
   end
 
-  def test_check_for_vacant_room_to_accomodate_guest__returns_room()
-    @karaoke.check_for_vacant_room_to_accomodate_guest(@rooms)
-    assert_equal("room1 is free, please go in there", "#{@room1.check_space_in_room} is free, please go in there")
+  def test_karaoke_has_available_rooms__added()
+    available_rooms = @karaoke.add_rooms_to_available_rooms
+    assert_equal(2, available_rooms.length)
   end
 
-  # def test_check_for_vacant_room_to_accomodate_guest__returns_all_full()
-  #   assert_equal(false, @room2.check_space_in_room)
-  # end
-  #
-  # def test_check_guest_into_room__success()
-  #   @karaoke.check_guest_age(@guest1)
-  #   @
-  # end
+  def test_allocate_first_available_room()
+    available_rooms = @karaoke.add_rooms_to_available_rooms
+    first_available_room = available_rooms[0]
+    assert_equal(@room1, first_available_room)
+    second_available_room = available_rooms[1]
+    assert_equal(@room3, second_available_room)
+  end
 
+  def test_check_in_guest_to_first_available_room()
+    @karaoke.check_in_guest_to_first_available_room(@guest1)
+    assert_equal(2, @room1.space_currently_available_in_this_room)
+  end
+
+  def test_check_in_guest_to_first_available_room()
+    @karaoke.check_in_guest_to_first_available_room(@guest1)
+    @karaoke.check_in_guest_to_first_available_room(@guest2)
+    @karaoke.check_in_guest_to_first_available_room(@guest3)
+    @karaoke.check_in_guest_to_first_available_room(@guest4)
+
+    assert_equal(0, @room1.space_currently_available_in_this_room)
+    assert_equal(4, @room3.space_currently_available_in_this_room)
+  end
 
 
 end
+
+
+
+
+####-----Why doesnt this work?-------###
+
+# def test_karaoke_has_rooms()
+#   assert_equal([@room1, @room2, @room3], @karaoke.rooms)
+# end
