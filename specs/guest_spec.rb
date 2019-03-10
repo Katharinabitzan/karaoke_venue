@@ -8,8 +8,8 @@ require_relative("../karaoke")
 class GuestTest < MiniTest::Test
 
   def setup()
-    @guest1 = Guest.new("Bill", 26, 100, "Mr. Trex")
-    @guest2 = Guest.new("Monika", 52, 500, "Hey Jude")
+    @guest1 = Guest.new("Bill",100, "Mr. Trex")
+    @guest2 = Guest.new("Monika", 500, "Hey Jude")
   end
 
   def test_can_create_guest_from_class()
@@ -17,9 +17,6 @@ class GuestTest < MiniTest::Test
   end
   def test_guest_has_name()
     assert_equal("Bill", @guest1.name)
-  end
-  def test_guest_has_age()
-    assert_equal(26, @guest1.age)
   end
   def test_guest_has_cash_in_wallet()
     assert_equal(100, @guest1.cash_in_wallet)

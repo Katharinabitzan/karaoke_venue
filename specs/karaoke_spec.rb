@@ -4,8 +4,6 @@ require_relative("../guest")
 require_relative("../song")
 require_relative("../karaoke")
 require_relative("../room")
-require("pry")
-
 
 class KaraokeTest < MiniTest::Test
 
@@ -15,10 +13,10 @@ class KaraokeTest < MiniTest::Test
     @room2 = Room.new(30, [], 2, 2, 0)
     @room3 = Room.new(30, [], 5, 0, 0)
 
-    @guest1 = Guest.new("Bill", 26, 100, "Mr. Trex")
-    @guest2 = Guest.new("Monika", 52, 500, "Hey Jude")
-    @guest3 = Guest.new("Sam", 12, 200, "OMG")
-    @guest4 = Guest.new("Bella", 20, 5, "Fly high")
+    @guest1 = Guest.new("Bill", 100, "Mr. Trex")
+    @guest2 = Guest.new("Monika", 500, "Hey Jude")
+    @guest3 = Guest.new("Sam", 200, "OMG")
+    @guest4 = Guest.new("Bella", 5, "Fly high")
 
     @song1 = Song.new("Hey Jude", "The Beatles")
     @song2 = Song.new("Believe", "Cher")
@@ -48,13 +46,6 @@ class KaraokeTest < MiniTest::Test
   def test_karaoke_can_make_playlist()
     @karaoke.make_playlist(@room3, @karaoke.songs)
     assert_equal(6, @room3.playlist.length)
-  end
-
-  def test_check_guest_age___old_enough()
-    assert_equal("Bill is old enough.", @karaoke.check_guest_age(@guest1))
-  end
-  def test_check_guest_age__too_young()
-    assert_equal("Sorry too young.", @karaoke.check_guest_age(@guest3))
   end
 
   def test_find_available_room__found()
@@ -107,11 +98,13 @@ class KaraokeTest < MiniTest::Test
     assert_nil(nil, to_cheer)
   end
 
-  def test_complete_transaction_fill_rooms()
-    chosen_room = @karaoke.find_available_room()
-    @karaoke.check_guest_into_room(@guest1, chosen_room)
-    @karaoke.check_guest_into_room(@guest2, chosen_room)
-    assert_equal(2, chosen_room.space_currently_available_in_this_room)
-    assert_equal(40, chosen_room.room_spending_tab)
+  def test_complete_transaction()
+    all_songs = [@song1, @song2, @song3, @song4, @song5, @song6]
+    available_room = @karaoke.find_available_room()
+    @karaoke.complete_transaction(@guest2, all_songs, available_room)
+    assert_equal(3, available_room.space_currently_available_in_this_room)
+    assert_equal(0, available_room.room_spending_tab)
+    # assert_equal(0, @karaoke.till)
+    # assert_equal(80, @guest1.cash_in_wallet)
   end
 end

@@ -17,9 +17,7 @@ class RoomTest < MiniTest::Test
     @song3 = Song.new("OMG", "Usher")
     @song4 = Song.new("Slim Shady", "Eminem")
     @song5 = Song.new("Enter Sandman", "Metallica")
-    @song6 = Song.new("Hit Me Baby One More Time", "Brittney Spears")
-
-
+    @song6 = Song.new("Hit Me Baby One More Time", "Britney Spears")
   end
 
   def test_can_create_room_from_class()
